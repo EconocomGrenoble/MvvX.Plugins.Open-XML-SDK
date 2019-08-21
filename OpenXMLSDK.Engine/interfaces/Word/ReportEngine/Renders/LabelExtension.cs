@@ -29,11 +29,11 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
             {
                 AlternativeFormatImportPart formatImportPart;
                 if (documentPart is MainDocumentPart)
-                    formatImportPart = (documentPart as MainDocumentPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml);
+                    formatImportPart = (documentPart as MainDocumentPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html);
                 else if (documentPart is HeaderPart)
-                    formatImportPart = (documentPart as HeaderPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml);
+                    formatImportPart = (documentPart as HeaderPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html);
                 else if (documentPart is FooterPart)
-                    formatImportPart = (documentPart as FooterPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml);
+                    formatImportPart = (documentPart as FooterPart).AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Html);
                 else
                     return null;
 
