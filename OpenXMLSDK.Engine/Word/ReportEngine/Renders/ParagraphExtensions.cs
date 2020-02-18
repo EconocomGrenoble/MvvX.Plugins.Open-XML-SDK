@@ -1,9 +1,10 @@
 ﻿using System;
 using DocumentFormat.OpenXml;
-using OpenXMLSDK.Engine.ReportEngine.DataContext;
-using OpenXMLSDK.Engine.Word.ReportEngine.Models;
 using OpenXMLSDK.Engine.Platform.Word.Extensions;
-using OpenXMLSDK.Engine.Word.ReportEngine.Models.ExtendedModels;
+using ReportEngine.Core.DataContext;
+using ReportEngine.Core.Template.ExtendedModels;
+using ReportEngine.Core.Template.Extensions;
+using ReportEngine.Core.Template.Text;
 
 namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
 {
@@ -57,14 +58,14 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
             var result = new DocumentFormat.OpenXml.Wordprocessing.Indentation();
 
             // Left :
-            if (!string.IsNullOrWhiteSpace(indentation.Left))
-                result.Left = indentation.Left;
+            if (indentation.Left.HasValue)
+                result.Left = indentation.Left.Value.ToString();
             if (indentation.LeftChars.HasValue)
                 result.LeftChars = indentation.LeftChars.Value;
 
             // Right :
-            if (!string.IsNullOrWhiteSpace(indentation.Right))
-                result.Right = indentation.Right;
+            if (indentation.Right.HasValue)
+                result.Right = indentation.Right.Value.ToString();
             if (indentation.RightChars.HasValue)
                 result.RightChars = indentation.RightChars.Value;
 

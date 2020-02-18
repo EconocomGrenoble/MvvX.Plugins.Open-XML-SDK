@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using OpenXMLSDK.Engine.ReportEngine.DataContext;
-using OpenXMLSDK.Engine.Word.ReportEngine.Models;
+using DO = DocumentFormat.OpenXml;
+using DOW = DocumentFormat.OpenXml.Wordprocessing;
+using DOP = DocumentFormat.OpenXml.Packaging;
+using ReportEngine.Core.DataContext;
+using ReportEngine.Core.Template;
+using ReportEngine.Core.Template.Tables;
+using ReportEngine.Core.Template.Extensions;
 
 namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
 {
@@ -16,15 +19,15 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
         /// <param name="parent"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static DocumentFormat.OpenXml.Wordprocessing.Table Render(this UniformGrid uniformGrid, Document document, OpenXmlElement parent, ContextModel context, OpenXmlPart documentPart, IFormatProvider formatProvider)
+        public static DOW.Table Render(this UniformGrid uniformGrid, Document document, DO.OpenXmlElement parent, ContextModel context, DOP.OpenXmlPart documentPart, IFormatProvider formatProvider)
         {
             context.ReplaceItem(uniformGrid, formatProvider);
 
             if (!string.IsNullOrEmpty(uniformGrid.DataSourceKey) && context.ExistItem<DataSourceModel>(uniformGrid.DataSourceKey))
             {
-                var datasource = context.GetItem<DataSourceModel>(uniformGrid.DataSourceKey);
+                var dataSource = context.GetItem<DataSourceModel>(uniformGrid.DataSourceKey);
 
-                if (datasource != null && datasource.Items.Count > 0)
+                if (dataSource != null && dataSource.Items.Count > 0)
                 {
                     var createdTable = TableExtensions.CreateTable(document, uniformGrid, context, documentPart, formatProvider);
                     var wordTable = createdTable.Item1;
@@ -40,7 +43,7 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
                     var lastCellsRow = new List<ContextModel>();
 
                     // add content rows
-                    foreach (var item in datasource.Items)
+                    foreach (var item in dataSource.Items)
                     {
                         if (i > 0 && i % uniformGrid.ColsWidth.Length == 0)
                         {
@@ -56,9 +59,9 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
                     if (i % uniformGrid.ColsWidth.Length == 0)
                         rowsContentContexts.Add(lastCellsRow);
 
-                    if (datasource.Items.Count % uniformGrid.ColsWidth.Length > 0)
+                    if (dataSource.Items.Count % uniformGrid.ColsWidth.Length > 0)
                     {
-                        var acountAddNullItems = uniformGrid.ColsWidth.Length - (datasource.Items.Count % uniformGrid.ColsWidth.Length);
+                        var acountAddNullItems = uniformGrid.ColsWidth.Length - (dataSource.Items.Count % uniformGrid.ColsWidth.Length);
                         if (acountAddNullItems > 0)
                         {
                             for (int j = 0; j < acountAddNullItems; j++)
@@ -75,7 +78,7 @@ namespace OpenXMLSDK.Engine.Word.ReportEngine.Renders
                         {
                             CantSplit = uniformGrid.CantSplitRows,
                         };
-                        row.InheritFromParent(uniformGrid);
+                        row.InheritsFromParent(uniformGrid);
 
                         wordTable.AppendChild(row.Render(document, wordTable, context, rowContentContext, uniformGrid.CellModel, documentPart, false, (i % 2 == 1), formatProvider));
 
